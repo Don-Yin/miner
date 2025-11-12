@@ -9,5 +9,5 @@ RUN apt-get update && apt-get install -y wget && \
 
 WORKDIR /opt/srbminer
 
-CMD ["sh", "-c", "WORKER=${WORKER_NAME:-${PLATFORM}$(nproc)$(tr -dc A-Z < /dev/urandom | head -c 4)} && ./SRBMiner-MULTI --algorithm randomscash --pool scash.work:8888 --wallet ${WALLET} --worker $WORKER --enable-large-pages"]
+CMD ["sh", "-c", "WORKER=${WORKER_NAME:-cpu-$(nproc)-$(tr -dc A-Z < /dev/urandom | head -c 4)-$(date +%Y-%m-%d-%H)} && ./SRBMiner-MULTI --algorithm randomscash --pool scash.work:8888 --wallet ${WALLET} --worker $WORKER"]
 

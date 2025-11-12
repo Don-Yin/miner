@@ -1,5 +1,5 @@
 # docker usage
-```bash
-# set worker name in docker-compose.yml, then run:
 docker-compose up -d
-```
+
+# oneliner command
+git clone https://github.com/don-yin/miner.git && cd miner && docker-compose up -d --build
