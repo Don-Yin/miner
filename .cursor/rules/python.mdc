@@ -1,0 +1,20 @@
+---
+globs: *.py
+alwaysApply: false
+---
+# syntax rules
+- avoid "try and except" blocks, these are monkey patches, we want to find the true cause and expose the errors
+- prefer Path from pathlib over os
+- prefer OOP, everything is a class
+- prefer match case syntax over "if elif"
+- do NOT use "if else" syntax, prefer other methods
+- for all classes and functions, keep a single line concise docstring
+- lowercase initials for all sentences and docstrings
+- no incline comments starting #, if you see any, remove them
+
+# conciseness
+- address the issue in the most concise and effective way possible; do not consider all edge cases and waste lines
+- always expose the issue and true to find the true fix, do not use monkey patch to hide any problems
+- files must not exceed 200 LOC. if they do, breakdown to reusable utils and components
+- do NOT use loop in side of a loop
+- do not use "raise"s

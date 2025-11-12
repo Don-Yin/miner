@@ -1,0 +1,9 @@
+services:
+  scash-miner:
+    platform: linux/amd64
+    build: ./scash
+    container_name: scash-miner
+    environment:
+      - PLATFORM=linux
+      - WALLET=scash1q8pjehs7k56xm04jsg77d7quhnx2y8s3dhkaynv
+    restart: unless-stopped
