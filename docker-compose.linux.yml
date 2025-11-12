@@ -1,10 +1,10 @@
 services:
-  scash-miner-share:
+  scash-miner:
     platform: linux/amd64
     build:
       context: .
-      dockerfile: dockerfiles/scash/dockerfile.scash.linux.share
-    container_name: scash-miner-share
+      dockerfile: dockerfiles/scash/dockerfile.scash.linux
+    container_name: scash-miner
     environment:
       - PLATFORM=linux
       - WALLET=scash1q8pjehs7k56xm04jsg77d7quhnx2y8s3dhkaynv

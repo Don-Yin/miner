@@ -1,10 +1,10 @@
 services:
-  scash-miner-macos-share:
+  scash-miner:
     platform: linux/arm64
     build:
       context: .
-      dockerfile: dockerfiles/scash/dockerfile.scash.macos.share
-    container_name: scash-miner-macos-share
+      dockerfile: dockerfiles/scash/dockerfile.scash.macos
+    container_name: scash-miner
     environment:
       - PLATFORM=macos
       - WALLET=scash1q8pjehs7k56xm04jsg77d7quhnx2y8s3dhkaynv

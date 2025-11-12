@@ -1,11 +1,16 @@
 **linux/macos:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install.sh | sh              # shared (8888)
-curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install.sh | sh -s -- --solo # solo (1111)
+curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install-unix | sh
 ```
 
-**windows - cmd (run as administrator):**
+**windows (run cmd as administrator):**
 ```cmd
-powershell -ExecutionPolicy Bypass -Command "iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-share.ps1).Content" # shared (8888)
-powershell -ExecutionPolicy Bypass -Command "iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-solo.ps1).Content"  # solo (1111)
+powershell -ExecutionPolicy Bypass -Command "iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install-windows).Content"
 ```
+
+# TODO
+- [x] remove the solo option
+- make command short
+- make one work across countries
+- make one command across machines
+- make annonymous

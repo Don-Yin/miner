@@ -1,0 +1,157 @@
+#!/bin/sh
+
+# Universal scash miner installer for Unix-like systems (Linux & macOS)
+# Usage: curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install-unix | sh
+
+# Detect platform
+detect_platform() {
+    case "$(uname -s)" in
+        Linux*)
+            echo "linux"
+            ;;
+        Darwin*)
+            echo "macos"
+            ;;
+        *)
+            echo "unknown"
+            ;;
+    esac
+}
+
+# Detect Linux system type
+detect_system() {
+    if command -v opkg >/dev/null 2>&1; then
+        echo "openwrt"
+    elif command -v apk >/dev/null 2>&1; then
+        echo "alpine"
+    elif command -v apt-get >/dev/null 2>&1; then
+        echo "debian"
+    elif command -v dnf >/dev/null 2>&1; then
+        echo "fedora"
+    elif command -v yum >/dev/null 2>&1; then
+        echo "rhel"
+    else
+        echo "unknown"
+    fi
+}
+
+PLATFORM=$(detect_platform)
+
+if [ "$PLATFORM" = "unknown" ]; then
+    echo "error: unsupported platform"
+    exit 1
+fi
+
+echo "detected platform: $PLATFORM"
+
+# Auto-install git if not present
+if ! command -v git >/dev/null 2>&1; then
+    echo "git not found. installing..."
+    
+    if [ "$PLATFORM" = "linux" ]; then
+        SYSTEM_TYPE=$(detect_system)
+        case "$SYSTEM_TYPE" in
+            openwrt)
+                opkg update && opkg install git-http || opkg install git
+                ;;
+            alpine)
+                apk add git
+                ;;
+            debian)
+                apt-get update && apt-get install -y git
+                ;;
+            fedora)
+                dnf install -y git
+                ;;
+            rhel)
+                yum install -y git
+                ;;
+            *)
+                echo "error: unsupported system type"
+                exit 1
+                ;;
+        esac
+    else
+        echo "error: git is required but not installed"
+        echo "please install git first: https://git-scm.com/download/mac"
+        exit 1
+    fi
+    
+    if ! command -v git >/dev/null 2>&1; then
+        echo "error: git installation failed"
+        exit 1
+    fi
+    echo "git installed successfully"
+fi
+
+# Check docker
+if ! command -v docker >/dev/null 2>&1; then
+    echo "error: docker is required but not installed"
+    if [ "$PLATFORM" = "macos" ]; then
+        echo "please install docker desktop: https://www.docker.com/products/docker-desktop"
+    else
+        echo "please install docker: https://docs.docker.com/engine/install/"
+    fi
+    exit 1
+fi
+
+# For Linux: check if docker daemon is running, start it if not
+if [ "$PLATFORM" = "linux" ]; then
+    if ! docker info >/dev/null 2>&1; then
+        echo "starting docker daemon..."
+        SYSTEM_TYPE=$(detect_system)
+        
+        case "$SYSTEM_TYPE" in
+            openwrt)
+                /etc/init.d/dockerd start
+                /etc/init.d/dockerd enable
+                ;;
+            alpine|debian|fedora|rhel)
+                if command -v systemctl >/dev/null 2>&1; then
+                    systemctl start docker
+                    systemctl enable docker
+                elif command -v service >/dev/null 2>&1; then
+                    service docker start
+                else
+                    dockerd >/dev/null 2>&1 &
+                fi
+                ;;
+            *)
+                dockerd >/dev/null 2>&1 &
+                ;;
+        esac
+        
+        # Wait for docker to start
+        echo "waiting for docker to start..."
+        for i in 1 2 3 4 5; do
+            if docker info >/dev/null 2>&1; then
+                echo "docker daemon started successfully"
+                break
+            fi
+            sleep 2
+        done
+        
+        if ! docker info >/dev/null 2>&1; then
+            echo "error: docker daemon failed to start"
+            exit 1
+        fi
+    fi
+fi
+
+# Clone or update miner repository
+if [ -d miner ]; then
+    echo "updating miner repository..."
+    (cd miner && git pull)
+else
+    echo "cloning miner repository..."
+    git clone https://github.com/Don-Yin/miner.git
+fi
+
+# Build and run docker containers
+echo "building and starting containers..."
+docker-compose -f "miner/docker-compose.${PLATFORM}.yml" up -d --build
+
+echo ""
+echo "installation complete!"
+echo "miner running on port 8888"
+
