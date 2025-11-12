@@ -1,7 +1,9 @@
 services:
   scash-miner:
     platform: linux/amd64
-    build: ./scash
+    build:
+      context: .
+      dockerfile: dockerfiles/dockerfile.scash
     container_name: scash-miner
     environment:
       - PLATFORM=linux
