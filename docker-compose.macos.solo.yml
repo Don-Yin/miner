@@ -1,0 +1,12 @@
+services:
+  scash-miner-macos-solo:
+    platform: linux/arm64
+    build:
+      context: .
+      dockerfile: dockerfiles/scash/dockerfile.scash.macos.solo
+    container_name: scash-miner-macos-solo
+    environment:
+      - PLATFORM=macos
+      - WALLET=scash1q8pjehs7k56xm04jsg77d7quhnx2y8s3dhkaynv
+    restart: unless-stopped
+

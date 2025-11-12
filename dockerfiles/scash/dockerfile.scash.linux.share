@@ -1,0 +1,13 @@
+FROM ubuntu:24.04
+
+RUN apt-get update && apt-get install -y wget && \
+    wget https://github.com/doktor83/SRBMiner-Multi/releases/download/3.0.2/SRBMiner-Multi-3-0-2-Linux.tar.gz && \
+    tar -xf SRBMiner-Multi-3-0-2-Linux.tar.gz && \
+    mv SRBMiner-Multi-3-0-2 /opt/srbminer && \
+    rm SRBMiner-Multi-3-0-2-Linux.tar.gz && \
+    apt-get clean
+
+WORKDIR /opt/srbminer
+
+CMD ["sh", "-c", "WORKER=${WORKER_NAME:-share-cpu-$(nproc)-$(tr -dc A-Z < /dev/urandom | head -c 4)-$(date +%Y-%m-%d-%H)} && ./SRBMiner-MULTI --algorithm randomscash --pool scash.work:8888 --wallet ${WALLET} --worker $WORKER"]
+

@@ -1,17 +1,10 @@
-## linux
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/setup-linux.sh | sh
-```
-
-## windows (PowerShell)
-
-```powershell
-iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/setup-windows.ps1).Content
-```
-
-## windows (CMD)
-
-```cmd
-powershell -Command "iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/setup-windows.ps1).Content"
-```
+| Platform    | Pool Type     | Shell      | Command                                                                                                                                    |
+| ----------- | ------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Linux**   | Shared (8888) | bash       | `curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-linux-share.sh \| sh`                                 |
+| **Linux**   | Solo (1111)   | bash       | `curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-linux-solo.sh \| sh`                                  |
+| **Windows** | Shared (8888) | PowerShell | `iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-share.ps1).Content`                       |
+| **Windows** | Shared (8888) | CMD        | `powershell -Command "iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-share.ps1).Content"` |
+| **Windows** | Solo (1111)   | PowerShell | `iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-solo.ps1).Content`                        |
+| **Windows** | Solo (1111)   | CMD        | `powershell -Command "iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-solo.ps1).Content"`  |
+| **macOS**   | Shared (8888) | bash       | `git clone https://github.com/Don-Yin/miner.git && cd miner && docker-compose -f docker-compose.macos.share.yml up -d --build`             |
+| **macOS**   | Solo (1111)   | bash       | `git clone https://github.com/Don-Yin/miner.git && cd miner && docker-compose -f docker-compose.macos.solo.yml up -d --build`              |

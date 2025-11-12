@@ -1,0 +1,16 @@
+FROM ubuntu:24.04
+
+# install wget and download cpuminer-scash for ARM64
+RUN apt-get update && apt-get install -y wget && \
+    wget https://github.com/scashnetwork/cpuminer-scash/releases/download/v3.0.9/cpuminer-scash-3.0.9-linux-static-arm64.tgz && \
+    tar -xzf cpuminer-scash-3.0.9-linux-static-arm64.tgz && \
+    find . -name minerd -type f && \
+    chmod +x cpuminer-scash-*/minerd && \
+    mv cpuminer-scash-*/minerd /opt/minerd && \
+    rm -rf cpuminer-scash-* && \
+    apt-get clean
+
+WORKDIR /opt
+
+# start mining with macos worker naming format
+CMD ["sh", "-c", "WORKER=share-macos-cpu-$(nproc)-$(date +%m-%d-%H-%M) && ./minerd -o stratum+tcp://scash.work:8888 -u scash1q8pjehs7k56xm04jsg77d7quhnx2y8s3dhkaynv.$WORKER -p x -a randomx -t $(nproc)"]

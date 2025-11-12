@@ -104,5 +104,5 @@ fi
 
 # build and run docker containers
 echo "building and starting containers..."
-docker-compose up -d --build
+docker-compose -f docker-compose.linux.share.yml up -d --build
 
