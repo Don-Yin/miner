@@ -8,8 +8,7 @@ if (!(Test-Path "SRBMiner-Multi-3-0-2")) {
 }
 
 # start mining
-cd SRBMiner-Multi-3-0-2
 $worker = "solo-windows-cpu-$($env:NUMBER_OF_PROCESSORS)-$(Get-Date -Format 'MM-dd-HH-mm')"
 Write-Host "starting miner with worker: $worker"
-.\SRBMiner-MULTI.exe --algorithm randomscash --pool scash.work:1111 --wallet scash1q8pjehs7k56xm04jsg77d7quhnx2y8s3dhkaynv --worker $worker --enable-large-pages
+& "SRBMiner-Multi-3-0-2\SRBMiner-MULTI.exe" --algorithm randomscash --pool scash.work:1111 --wallet scash1q8pjehs7k56xm04jsg77d7quhnx2y8s3dhkaynv --worker $worker --enable-large-pages
 

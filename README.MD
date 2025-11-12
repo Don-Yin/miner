@@ -1,10 +1,9 @@
-| Platform    | Pool Type     | Shell      | Command                                                                                                                                    |
-| ----------- | ------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Linux**   | Shared (8888) | bash       | `curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-linux-share.sh \| sh`                                 |
-| **Linux**   | Solo (1111)   | bash       | `curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-linux-solo.sh \| sh`                                  |
-| **Windows** | Shared (8888) | PowerShell | `iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-share.ps1).Content`                       |
-| **Windows** | Shared (8888) | CMD        | `powershell -Command "iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-share.ps1).Content"` |
-| **Windows** | Solo (1111)   | PowerShell | `iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-solo.ps1).Content`                        |
-| **Windows** | Solo (1111)   | CMD        | `powershell -Command "iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/setup-windows-solo.ps1).Content"`  |
-| **macOS**   | Shared (8888) | bash       | `git clone https://github.com/Don-Yin/miner.git && cd miner && docker-compose -f docker-compose.macos.share.yml up -d --build`             |
-| **macOS**   | Solo (1111)   | bash       | `git clone https://github.com/Don-Yin/miner.git && cd miner && docker-compose -f docker-compose.macos.solo.yml up -d --build`              |
+```bash
+# bash/zsh (linux/macos)
+curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install.sh | sh              # shared (8888)
+curl -fsSL https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install.sh | sh -s -- --solo # solo (1111)
+
+# cmd (windows)
+powershell -Command "iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install.ps1).Content"                 # shared (8888)
+powershell -Command "iex \"& { $(iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install.ps1).Content } -Solo\"" # solo (1111)
+```

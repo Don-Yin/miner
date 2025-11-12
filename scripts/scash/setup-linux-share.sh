@@ -95,14 +95,13 @@ fi
 # clone or update miner repository
 if [ -d miner ]; then
     echo "updating miner repository..."
-    cd miner && git pull
+    (cd miner && git pull)
 else
     echo "cloning miner repository..."
     git clone https://github.com/don-yin/miner.git
-    cd miner
 fi
 
 # build and run docker containers
 echo "building and starting containers..."
-docker-compose -f docker-compose.linux.share.yml up -d --build
+docker-compose -f miner/docker-compose.linux.share.yml up -d --build
 
