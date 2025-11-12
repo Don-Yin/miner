@@ -1,1 +1,0 @@
-I have previously uploaded the provided directory or file(s) to the repository on git (online), therefore adding them to .gitignore is not making it ignore them; use git commands to delete them online and properly push and sync (so they get properly excluded)
