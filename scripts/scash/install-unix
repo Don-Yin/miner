@@ -147,6 +147,33 @@ else
     git clone https://github.com/Don-Yin/miner.git
 fi
 
+# Enable huge pages for RandomX mining performance (Linux only)
+if [ "$PLATFORM" = "linux" ]; then
+    echo "configuring huge pages for optimal mining performance..."
+    
+    # Calculate huge pages needed (2048 pages = 4GB, adjust based on available RAM)
+    TOTAL_RAM_KB=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+    TOTAL_RAM_GB=$((TOTAL_RAM_KB / 1024 / 1024))
+    
+    if [ "$TOTAL_RAM_GB" -ge 8 ]; then
+        HUGEPAGES=3072  # 6GB for systems with 8GB+ RAM
+    elif [ "$TOTAL_RAM_GB" -ge 4 ]; then
+        HUGEPAGES=2048  # 4GB for systems with 4-8GB RAM
+    else
+        HUGEPAGES=1024  # 2GB for systems with less RAM
+    fi
+    
+    echo "setting $HUGEPAGES huge pages ($(($HUGEPAGES * 2 / 1024))GB)..."
+    sysctl -w vm.nr_hugepages=$HUGEPAGES
+    
+    # Make it persistent across reboots
+    if ! grep -q "vm.nr_hugepages" /etc/sysctl.conf 2>/dev/null; then
+        echo "vm.nr_hugepages=$HUGEPAGES" >> /etc/sysctl.conf
+    else
+        sed -i "s/^vm.nr_hugepages=.*/vm.nr_hugepages=$HUGEPAGES/" /etc/sysctl.conf
+    fi
+fi
+
 # Build and run docker containers
 echo "building and starting containers..."
 docker-compose -f "miner/docker-compose.${PLATFORM}.yml" up -d --build

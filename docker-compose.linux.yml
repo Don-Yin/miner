@@ -9,3 +9,9 @@ services:
       - PLATFORM=linux
       - WALLET=scash1q8pjehs7k56xm04jsg77d7quhnx2y8s3dhkaynv
     restart: unless-stopped
+    privileged: true
+    mem_swappiness: 0
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
