@@ -1,8 +1,54 @@
 # Universal scash miner installer for Windows
-# Usage: iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install-windows).Content
+# Usage: Run PowerShell as Administrator, then:
+#        iex (iwr -useb https://raw.githubusercontent.com/Don-Yin/miner/main/scripts/scash/install-windows).Content
 
 Write-Host "detected platform: windows"
 Write-Host ""
+
+# Check if running as Administrator
+$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+# Enable Large Pages (requires admin)
+if ($isAdmin) {
+    Write-Host "enabling large pages support..." -ForegroundColor Cyan
+    $username = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    
+    # Grant SeLockMemoryPrivilege using ntrights.exe method or secedit
+    try {
+        # Export current security policy
+        secedit /export /cfg "$env:TEMP\secpol.cfg" | Out-Null
+        
+        # Read and modify policy
+        $content = Get-Content "$env:TEMP\secpol.cfg"
+        $lockMemoryLine = $content | Where-Object { $_ -match "SeLockMemoryPrivilege" }
+        
+        if ($lockMemoryLine) {
+            # Add user to existing policy
+            $content = $content -replace "(SeLockMemoryPrivilege\s*=\s*)(.*)", "`$1`$2,$username"
+        } else {
+            # Create new policy line
+            $content += "`r`nSeLockMemoryPrivilege = $username"
+        }
+        
+        # Write and apply new policy
+        $content | Set-Content "$env:TEMP\secpol_new.cfg"
+        secedit /configure /db secedit.sdb /cfg "$env:TEMP\secpol_new.cfg" /areas USER_RIGHTS | Out-Null
+        Remove-Item "$env:TEMP\secpol.cfg", "$env:TEMP\secpol_new.cfg" -ErrorAction SilentlyContinue
+        
+        Write-Host "large pages privilege granted successfully" -ForegroundColor Green
+        Write-Host "NOTE: You may need to log out and log back in for changes to take effect" -ForegroundColor Yellow
+    } catch {
+        Write-Host "automatic configuration failed" -ForegroundColor Red
+        Write-Host "please enable manually: secpol.msc -> Local Policies -> User Rights Assignment -> Lock pages in memory" -ForegroundColor Yellow
+    }
+    Write-Host ""
+} else {
+    Write-Host "WARNING: Not running as Administrator!" -ForegroundColor Red
+    Write-Host "Large pages will NOT work without admin privileges" -ForegroundColor Red
+    Write-Host "Please close this window and run PowerShell as Administrator" -ForegroundColor Yellow
+    Write-Host ""
+    Read-Host "Press Enter to continue anyway (will mine at half speed)"
+}
 
 # Download and extract srbminer if not present
 if (!(Test-Path "SRBMiner-Multi-3-0-2")) {
